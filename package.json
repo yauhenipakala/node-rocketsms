@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/wcoder/node-rocketsms#readme",
   "dependencies": {
-    "axios": "^1.9.0",
+    "axios": "^1.13.2",
     "md5": "^2.3.0"
   },
   "devDependencies": {
-    "mocha": "^11.2.2",
+    "mocha": "^11.7.5",
     "should": "^13.2.3"
   }
 }
