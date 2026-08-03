@@ -1,8 +1,10 @@
 {
   "name": "node-rocketsms",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Modern RocketSMS SMS-gateway API.",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "main": "src/index.js",
   "type": "module",
   "scripts": {
