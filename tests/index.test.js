@@ -69,7 +69,9 @@ describe('RocketSMS', () => {
 
     it('rejects when the request fails', async () => {
       axios.post.mockRejectedValue(new Error('network down'));
-      await expect(sms.send('375299999999', 'hi')).rejects.toThrow('network down');
+      await expect(sms.send('375299999999', 'hi')).rejects.toThrow(
+        'network down'
+      );
     });
   });
 
@@ -122,9 +124,13 @@ describe('RocketSMS', () => {
 
       const res = await sms.addSender('testsender');
 
-      expect(axios.post).toHaveBeenCalledWith(`${API}/simple/senders/add`, null, {
-        params: { username: USERNAME, password: HASH, sender: 'testsender' }
-      });
+      expect(axios.post).toHaveBeenCalledWith(
+        `${API}/simple/senders/add`,
+        null,
+        {
+          params: { username: USERNAME, password: HASH, sender: 'testsender' }
+        }
+      );
       expect(res).toEqual(data);
     });
 

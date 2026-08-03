@@ -21,17 +21,21 @@ class RocketSMS {
    * @param {bool} [priority] - fast sending (codes, passwords).
    */
   async send(phone, text, sender, timestamp, priority) {
-    const response = await axios.post('https://api.rocketsms.by/simple/send', null, {
-      params: {
-        username: this.username,
-        password: this.hash,
-        phone: phone,
-        text: text,
-        sender: sender,
-        timestamp: timestamp,
-        priority: priority
+    const response = await axios.post(
+      'https://api.rocketsms.by/simple/send',
+      null,
+      {
+        params: {
+          username: this.username,
+          password: this.hash,
+          phone: phone,
+          text: text,
+          sender: sender,
+          timestamp: timestamp,
+          priority: priority
+        }
       }
-    });
+    );
     return response.data;
   }
 
@@ -54,12 +58,15 @@ class RocketSMS {
    * Get current balance.
    */
   async balance() {
-    const response = await axios.get('https://api.rocketsms.by/simple/balance', {
-      params: {
-        username: this.username,
-        password: this.hash
+    const response = await axios.get(
+      'https://api.rocketsms.by/simple/balance',
+      {
+        params: {
+          username: this.username,
+          password: this.hash
+        }
       }
-    });
+    );
     return response.data;
   }
 
@@ -67,12 +74,15 @@ class RocketSMS {
    * Get available alpha numbers.
    */
   async senders() {
-    const response = await axios.get('https://api.rocketsms.by/simple/senders', {
-      params: {
-        username: this.username,
-        password: this.hash
+    const response = await axios.get(
+      'https://api.rocketsms.by/simple/senders',
+      {
+        params: {
+          username: this.username,
+          password: this.hash
+        }
       }
-    });
+    );
     return response.data;
   }
 
@@ -81,13 +91,17 @@ class RocketSMS {
    * @param {string} sender - Alpha number for approval.
    */
   async addSender(sender) {
-    const response = await axios.post('https://api.rocketsms.by/simple/senders/add', null, {
-      params: {
-        username: this.username,
-        password: this.hash,
-        sender: sender,
+    const response = await axios.post(
+      'https://api.rocketsms.by/simple/senders/add',
+      null,
+      {
+        params: {
+          username: this.username,
+          password: this.hash,
+          sender: sender
+        }
       }
-    });
+    );
     return response.data;
   }
 
@@ -95,14 +109,17 @@ class RocketSMS {
    * Get available templates.
    */
   async templates() {
-    const response = await axios.get('https://api.rocketsms.by/simple/templates', {
-      params: {
-        username: this.username,
-        password: this.hash
+    const response = await axios.get(
+      'https://api.rocketsms.by/simple/templates',
+      {
+        params: {
+          username: this.username,
+          password: this.hash
+        }
       }
-    });
+    );
     return response.data;
   }
 }
 
-module.exports = RocketSMS;
+export default RocketSMS;

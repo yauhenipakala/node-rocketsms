@@ -5,9 +5,11 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
-    "coverage": "jest --coverage",
-    "coverage:report": "jest --coverage --coverageReporters=text-lcov && open coverage/lcov-report/index.html"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "coverage:report": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --coverageReporters=lcov && open coverage/lcov-report/index.html",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -47,6 +49,12 @@
     "md5": "^2.3.0"
   },
   "devDependencies": {
-    "jest": "^30.4.2"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^17.9.0",
+    "jest": "^30.4.2",
+    "prettier": "^3.9.6"
   }
 }
