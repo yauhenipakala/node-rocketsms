@@ -45,9 +45,6 @@
     "url": "https://github.com/yauhenipakala/node-rocketsms/issues"
   },
   "homepage": "https://github.com/yauhenipakala/node-rocketsms#readme",
-  "dependencies": {
-    "md5": "^2.3.0"
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.8.0",

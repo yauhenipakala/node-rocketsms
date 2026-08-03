@@ -1,4 +1,4 @@
-import md5 from 'md5';
+import { createHash } from 'node:crypto';
 
 const ENDPOINT = 'https://api.rocketsms.by';
 
@@ -10,7 +10,16 @@ const ENDPOINT = 'https://api.rocketsms.by';
 class RocketSMS {
   constructor(username, password) {
     this.username = username;
-    this.hash = md5(password);
+    this.hash = this.#md5(password);
+  }
+
+  /**
+   * Compute the MD5 hex digest of a value.
+   * @param {string} value - value to hash.
+   * @private
+   */
+  #md5(value) {
+    return createHash('md5').update(value).digest('hex');
   }
 
   /**

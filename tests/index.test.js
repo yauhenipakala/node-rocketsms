@@ -1,11 +1,11 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
-import md5 from 'md5';
 import RocketSMS from '../src/index.js';
 
 const API = 'https://api.rocketsms.by';
 const USERNAME = 'user';
 const PASSWORD = 'secret';
-const HASH = md5(PASSWORD);
+// Known MD5 of 'secret' — an independent oracle for the hashing.
+const HASH = '5ebe2294ecd0e0f08eab7690d2a6ee69';
 
 const jsonOk = data => ({ ok: true, status: 200, json: async () => data });
 
