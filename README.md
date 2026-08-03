@@ -2,6 +2,10 @@
 
 Modern RocketSMS SMS-gateway API.
 
+> [!WARNING]
+> This package is **ESM-only** and requires **Node.js ≥ 18**. It uses the
+> built-in global `fetch` (no third-party HTTP dependency), so load it with
+> `import` — `require()` is not supported.
 ## Features
 
 - Supports [API spec](https://rocketsms.by/storage/rocketsms_api.pdf) v1.3.0.
@@ -19,7 +23,7 @@ npm install node-rocketsms
 ## Example Usage
 
 ```js
-const RocketSMS = require('node-rocketsms');
+import RocketSMS from 'node-rocketsms';
 
 const sms = new RocketSMS('username', 'password');
 ```
@@ -62,4 +66,4 @@ const result = await sms.templates();
 
 ---
 
-&copy;
+&copy; 2026 [Yauheni Pakala](https://ypakala.com) | [MIT License](LICENSE)
