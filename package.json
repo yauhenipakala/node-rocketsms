@@ -3,6 +3,7 @@
   "version": "0.2.2",
   "description": "Modern RocketSMS SMS-gateway API.",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",

@@ -1,8 +1,16 @@
-jest.mock('axios');
+import { jest, describe, it, expect, beforeEach } from '@jest/globals';
+import md5 from 'md5';
 
-const axios = require('axios');
-const md5 = require('md5');
-const RocketSMS = require('../src');
+// Mock axios before importing the module under test (ESM mocks are not hoisted).
+jest.unstable_mockModule('axios', () => ({
+  default: {
+    get: jest.fn(),
+    post: jest.fn()
+  }
+}));
+
+const { default: axios } = await import('axios');
+const { default: RocketSMS } = await import('../src/index.js');
 
 const API = 'https://api.rocketsms.by';
 const USERNAME = 'user';

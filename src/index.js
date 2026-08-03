@@ -1,5 +1,5 @@
-const axios = require('axios');
-const md5 = require('md5');
+import axios from 'axios';
+import md5 from 'md5';
 
 /**
  * RocketSMS API
