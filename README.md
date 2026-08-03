@@ -14,6 +14,7 @@ Modern RocketSMS SMS-gateway API.
 ## Features
 
 - Supports [API spec](https://rocketsms.by/storage/rocketsms_api.pdf) v1.3.0.
+- Zero dependencies — built on native `fetch` and `crypto`, no third-party HTTP client.
 - Clear, lightful API layer
 - Async/await/Promises
 
