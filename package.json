@@ -1,6 +1,6 @@
 {
   "name": "node-rocketsms",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Modern RocketSMS SMS-gateway API.",
   "main": "src/index.js",
   "type": "module",
