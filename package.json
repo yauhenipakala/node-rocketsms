@@ -4,7 +4,22 @@
   "description": "Modern RocketSMS SMS-gateway API.",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha --timeout 2000 tests/index.js"
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "coverage:report": "jest --coverage --coverageReporters=text-lcov && open coverage/lcov-report/index.html"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
   "repository": {
     "type": "git",
@@ -31,7 +46,6 @@
     "md5": "^2.3.0"
   },
   "devDependencies": {
-    "mocha": "^11.8.0",
-    "should": "^13.2.3"
+    "jest": "^30.4.2"
   }
 }
