@@ -1,4 +1,5 @@
-import { createHash } from 'node:crypto';
+import Client from './client.js';
+import Md5 from './md5.js';
 
 /**
  * Available RocketSMS connection endpoints.
@@ -21,6 +22,8 @@ export const ENDPOINTS = {
  * v1.5.0
  */
 class RocketSMS {
+  #client;
+
   /**
    * @param {string} username - personal cabinet login (УНП).
    * @param {string} password - personal cabinet password (md5-hashed internally).
@@ -28,50 +31,16 @@ class RocketSMS {
    *   Defaults to https://api.rocketsms.by.
    */
   constructor(username, password, endpoint = ENDPOINTS.DEFAULT) {
-    this.username = username;
-    this.hash = this.#md5(password);
-    this.endpoint = endpoint;
+    const auth = {
+      username,
+      password: Md5.hash(password)
+    };
+    this.#client = new Client(endpoint, auth);
   }
 
-  /**
-   * Compute the MD5 hex digest of a value.
-   * @param {string} value - value to hash.
-   * @private
-   */
-  #md5(value) {
-    return createHash('md5').update(value).digest('hex');
-  }
-
-  /**
-   * Perform an API request. Per the RocketSMS API, parameters are always sent
-   * as a query string; undefined values are omitted.
-   * @param {string} method - HTTP method.
-   * @param {string} path - API path, e.g. /simple/send.
-   * @param {object} [params] - request parameters.
-   * @private
-   */
-  async #request(method, path, params = {}) {
-    const query = new URLSearchParams({
-      username: this.username,
-      password: this.hash
-    });
-    for (const [key, value] of Object.entries(params)) {
-      if (value === undefined) {
-        continue;
-      }
-      if (Array.isArray(value)) {
-        // The API expects repeated keys, e.g. phones[]=a&phones[]=b.
-        for (const item of value) {
-          query.append(`${key}[]`, item);
-        }
-      } else {
-        query.append(key, value);
-      }
-    }
-    const response = await fetch(`${this.endpoint}${path}?${query}`, {
-      method
-    });
-    return response.json();
+  /** The API host this instance targets. */
+  get endpoint() {
+    return this.#client.endpoint;
   }
 
   /**
@@ -84,7 +53,7 @@ class RocketSMS {
    * @param {bool} [priority] - if true, skip the queue (codes, passwords, etc.).
    */
   async send(phone, text, sender, timestamp, priority) {
-    return this.#request('POST', '/simple/send', {
+    return this.#client.request('POST', '/simple/send', {
       phone,
       text,
       sender,
@@ -102,7 +71,7 @@ class RocketSMS {
    * @param {int} [timestamp] - unix timestamp (seconds) for delayed sending.
    */
   async bulkSend(phones, text, sender, timestamp) {
-    return this.#request('POST', '/simple/bulkSend', {
+    return this.#client.request('POST', '/simple/bulkSend', {
       phones,
       text,
       sender,
@@ -115,21 +84,21 @@ class RocketSMS {
    * @param {int} id - message ID.
    */
   async status(id) {
-    return this.#request('GET', '/simple/status', { id });
+    return this.#client.request('GET', '/simple/status', { id });
   }
 
   /**
    * Get current balance.
    */
   async balance() {
-    return this.#request('GET', '/simple/balance');
+    return this.#client.request('GET', '/simple/balance');
   }
 
   /**
    * Get available alpha numbers.
    */
   async senders() {
-    return this.#request('GET', '/simple/senders');
+    return this.#client.request('GET', '/simple/senders');
   }
 
   /**
@@ -138,14 +107,14 @@ class RocketSMS {
    *   latin letters, digits, dot and hyphen.
    */
   async addSender(sender) {
-    return this.#request('POST', '/simple/senders/add', { sender });
+    return this.#client.request('POST', '/simple/senders/add', { sender });
   }
 
   /**
    * Get available templates.
    */
   async templates() {
-    return this.#request('GET', '/simple/templates');
+    return this.#client.request('GET', '/simple/templates');
   }
 }
 

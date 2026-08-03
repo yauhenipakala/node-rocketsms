@@ -28,11 +28,16 @@ beforeEach(() => {
 });
 
 describe('RocketSMS', () => {
-  describe('constructor', () => {
-    it('stores the username and md5-hashes the password', () => {
-      expect(sms.username).toBe(USERNAME);
-      expect(sms.hash).toBe(HASH);
-      expect(sms.hash).not.toBe(PASSWORD);
+  describe('authentication', () => {
+    it('signs requests with the username and md5-hashed password', async () => {
+      globalThis.fetch.mockResolvedValue(jsonOk({}));
+
+      await sms.balance();
+
+      const { params } = lastCall();
+      expect(params.username).toBe(USERNAME);
+      expect(params.password).toBe(HASH);
+      expect(params.password).not.toBe(PASSWORD);
     });
   });
 
