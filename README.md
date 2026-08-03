@@ -6,6 +6,11 @@ Modern RocketSMS SMS-gateway API.
 > This package is **ESM-only** and requires **Node.js ≥ 18**. It uses the
 > built-in global `fetch` (no third-party HTTP dependency), so load it with
 > `import` — `require()` is not supported.
+>
+> Requests reject only on network or HTTP-level failures. RocketSMS
+> application errors are returned in the response body as `{ "error": "..." }`,
+> so check for an `error` field on the result.
+
 ## Features
 
 - Supports [API spec](https://rocketsms.by/storage/rocketsms_api.pdf) v1.3.0.

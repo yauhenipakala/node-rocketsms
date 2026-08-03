@@ -1,5 +1,6 @@
-import axios from 'axios';
 import md5 from 'md5';
+
+const ENDPOINT = 'https://api.rocketsms.by';
 
 /**
  * RocketSMS API
@@ -13,6 +14,28 @@ class RocketSMS {
   }
 
   /**
+   * Perform an API request. Per the RocketSMS API, parameters are always sent
+   * as a query string; undefined values are omitted.
+   * @param {string} method - HTTP method.
+   * @param {string} path - API path, e.g. /simple/send.
+   * @param {object} [params] - request parameters.
+   * @private
+   */
+  async #request(method, path, params = {}) {
+    const query = new URLSearchParams({
+      username: this.username,
+      password: this.hash
+    });
+    for (const [key, value] of Object.entries(params)) {
+      if (value !== undefined) {
+        query.append(key, value);
+      }
+    }
+    const response = await fetch(`${ENDPOINT}${path}?${query}`, { method });
+    return response.json();
+  }
+
+  /**
    * Send a single message.
    * @param {string} phone - recipient number.
    * @param {string} text - message.
@@ -21,22 +44,13 @@ class RocketSMS {
    * @param {bool} [priority] - fast sending (codes, passwords).
    */
   async send(phone, text, sender, timestamp, priority) {
-    const response = await axios.post(
-      'https://api.rocketsms.by/simple/send',
-      null,
-      {
-        params: {
-          username: this.username,
-          password: this.hash,
-          phone: phone,
-          text: text,
-          sender: sender,
-          timestamp: timestamp,
-          priority: priority
-        }
-      }
-    );
-    return response.data;
+    return this.#request('POST', '/simple/send', {
+      phone,
+      text,
+      sender,
+      timestamp,
+      priority
+    });
   }
 
   /**
@@ -44,46 +58,21 @@ class RocketSMS {
    * @param {int} id - message ID.
    */
   async status(id) {
-    const response = await axios.get('https://api.rocketsms.by/simple/status', {
-      params: {
-        username: this.username,
-        password: this.hash,
-        id: id
-      }
-    });
-    return response.data;
+    return this.#request('GET', '/simple/status', { id });
   }
 
   /**
    * Get current balance.
    */
   async balance() {
-    const response = await axios.get(
-      'https://api.rocketsms.by/simple/balance',
-      {
-        params: {
-          username: this.username,
-          password: this.hash
-        }
-      }
-    );
-    return response.data;
+    return this.#request('GET', '/simple/balance');
   }
 
   /**
    * Get available alpha numbers.
    */
   async senders() {
-    const response = await axios.get(
-      'https://api.rocketsms.by/simple/senders',
-      {
-        params: {
-          username: this.username,
-          password: this.hash
-        }
-      }
-    );
-    return response.data;
+    return this.#request('GET', '/simple/senders');
   }
 
   /**
@@ -91,34 +80,14 @@ class RocketSMS {
    * @param {string} sender - Alpha number for approval.
    */
   async addSender(sender) {
-    const response = await axios.post(
-      'https://api.rocketsms.by/simple/senders/add',
-      null,
-      {
-        params: {
-          username: this.username,
-          password: this.hash,
-          sender: sender
-        }
-      }
-    );
-    return response.data;
+    return this.#request('POST', '/simple/senders/add', { sender });
   }
 
   /**
    * Get available templates.
    */
   async templates() {
-    const response = await axios.get(
-      'https://api.rocketsms.by/simple/templates',
-      {
-        params: {
-          username: this.username,
-          password: this.hash
-        }
-      }
-    );
-    return response.data;
+    return this.#request('GET', '/simple/templates');
   }
 }
 
