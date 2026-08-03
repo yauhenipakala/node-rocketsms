@@ -13,7 +13,7 @@ Modern RocketSMS SMS-gateway API.
 
 ## Features
 
-- Supports [API spec](https://rocketsms.by/storage/rocketsms_api.pdf) v1.3.0.
+- Supports [API spec](https://rocketsms.by/storage/rocketsms_api.pdf) v1.5.0.
 - Zero dependencies — built on native `fetch` and `crypto`, no third-party HTTP client.
 - Clear, lightful API layer
 - Async/await/Promises
@@ -29,15 +29,36 @@ npm install node-rocketsms
 ## Example Usage
 
 ```js
-import RocketSMS from 'node-rocketsms';
+import RocketSMS, { ENDPOINTS } from 'node-rocketsms';
 
 const sms = new RocketSMS('username', 'password');
+
+// Optionally target an alternative connection endpoint:
+// const sms = new RocketSMS('username', 'password', ENDPOINTS.EU);
 ```
+
+Available endpoints (`ENDPOINTS`, also exposed as `RocketSMS.ENDPOINTS`):
+
+| Key | Host | Use |
+| --- | --- | --- |
+| `DEFAULT` | `https://api.rocketsms.by` | Main endpoint, suitable for most clients |
+| `BY` | `https://api-by.rocketsms.by` | Belarus (BTK/MTS protected segments) |
+| `EU` | `https://api.rocketsms.pl` | European Union |
+| `RU` | `https://api.rocketsms.ru` | Russia |
 
 ### Create message
 
 ``` js
 const result = await sms.send('375999999999', 'New message text!');
+```
+
+### Bulk message
+
+```js
+const result = await sms.bulkSend(
+  ['375999999999', '375888888888'],
+  'New message text!'
+);
 ```
 
 ### Message status

@@ -1,5 +1,5 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
-import RocketSMS from '../src/index.js';
+import RocketSMS, { ENDPOINTS } from '../src/index.js';
 
 const API = 'https://api.rocketsms.by';
 const USERNAME = 'user';
@@ -77,6 +77,70 @@ describe('RocketSMS', () => {
       await expect(sms.send('375299999999', 'hi')).rejects.toThrow(
         'network down'
       );
+    });
+  });
+
+  describe('#bulkSend()', () => {
+    it('posts to /simple/bulkSend with a phones array and no priority', async () => {
+      const data = [
+        { id: 8767, status: 'SENT' },
+        { id: 8768, status: 'SENT' }
+      ];
+      globalThis.fetch.mockResolvedValue(jsonOk(data));
+
+      const phones = ['375296890043', '375298350043'];
+      const res = await sms.bulkSend(phones, 'hi', 'Sender', 123);
+
+      const call = lastCall();
+      expect(call.method).toBe('POST');
+      expect(call.path).toBe(`${API}/simple/bulkSend`);
+      // The array is serialised as repeated phones[] keys, per the API.
+      const parsed = new URL(globalThis.fetch.mock.calls.at(-1)[0]);
+      expect(parsed.searchParams.getAll('phones[]')).toEqual(phones);
+      expect(call.params).toMatchObject({
+        username: USERNAME,
+        password: HASH,
+        text: 'hi',
+        sender: 'Sender',
+        timestamp: '123'
+      });
+      expect(call.params).not.toHaveProperty('priority');
+      expect(res).toEqual(data);
+    });
+
+    it('does not send a priority param', async () => {
+      globalThis.fetch.mockResolvedValue(jsonOk([]));
+
+      await sms.bulkSend(['375296890043'], 'hi');
+
+      expect(lastCall().params).not.toHaveProperty('priority');
+    });
+  });
+
+  describe('endpoint', () => {
+    it('exposes all connection endpoints as an object', () => {
+      expect(ENDPOINTS).toEqual({
+        DEFAULT: 'https://api.rocketsms.by',
+        BY: 'https://api-by.rocketsms.by',
+        EU: 'https://api.rocketsms.pl',
+        RU: 'https://api.rocketsms.ru'
+      });
+      expect(RocketSMS.ENDPOINTS).toBe(ENDPOINTS);
+    });
+
+    it('defaults to the main endpoint', () => {
+      expect(sms.endpoint).toBe(ENDPOINTS.DEFAULT);
+      expect(sms.endpoint).toBe(API);
+    });
+
+    it('uses a custom endpoint when provided', async () => {
+      const client = new RocketSMS(USERNAME, PASSWORD, ENDPOINTS.EU);
+      globalThis.fetch.mockResolvedValue(jsonOk({}));
+
+      await client.balance();
+
+      const { path } = lastCall();
+      expect(path).toBe(`${ENDPOINTS.EU}/simple/balance`);
     });
   });
 
